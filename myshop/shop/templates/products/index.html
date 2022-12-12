@@ -1,0 +1,129 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Home
+{% endblock %}
+
+{% block content %} 
+        {% include '_messages.html' %}
+           <!-- Navbar starts -->
+           <div class="container">
+                <nav class="navbar navbar-expand-lg bg-light">
+                    <div class="container-fluid">
+                        <a class="navbar-brand" href="/">My Shop</a>
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                            <li class="nav-item">
+                                <a class="nav-link" aria-current="page" href="/">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">All Products</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Categories
+                                </a>
+                                <ul class="dropdown-menu">
+                                    {% for category in categories %}
+                                <li><a class="dropdown-item" href="{{ url_for('get_category', id=category.id) }}">{{ category.name }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Brands
+                                </a>
+                                <ul class="dropdown-menu">
+                                    {% for brand in brands %}
+                                <li><a class="dropdown-item" href="{{ url_for('get_brand', id=brand.id) }}">{{ brand.name }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link disabled">Disabled</a>
+                            </li>
+                            </ul>
+                            <form class="d-flex" role="search">
+                            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                            <button class="btn btn-outline-success" type="submit">Search</button>
+                            </form>
+                        </div>
+                    </div>
+                </nav>
+           </div>
+           <!-- Navbar ends -->
+
+           <div class="container">
+            <div class="row">
+                {% if brand %}
+                    {% for b in brand %}
+                        <div class="col-md-3 mt-3 w-25">
+                            <div class="card h-100 p-0">
+                                <div class="card-head" style="height: 223px;">
+                                    <img src="{{ url_for('static', filename='images/' + b.image_1) }}" alt="{{ b.name }}" width="100%" height="100%">
+                                </div>
+                                <div class="card-body p-1">
+                                    <h6 class="text-center">{{ b.name }}</h6>
+                                    <p class="text-center p-0 mb-0"><small>KSh. {{ b.price }}</small></p>
+                                    {% if b.discount > 0 %}
+                                    <p class="text-center text-danger p-0 mb-0"><small>{{ b.discount }}% Off</small></p>
+                                    {% endif %}
+                                </div>
+                                <div class="card-footer">
+                                    <a href="#" class="float-start btn btn-sm btn-primary">details</a>
+                                    <a href="#" class="float-end btn btn-sm btn-warning">Add to Cart</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+
+                {% elif get_cat_pro %}
+                    {% for get_cat in get_cat_pro %}
+                        <div class="col-md-3 mt-3 w-25">
+                            <div class="card h-100 p-0">
+                                <div class="card-head" style="height: 223px;">
+                                    <img src="{{ url_for('static', filename='images/' + get_cat.image_1) }}" alt="{{ get_cat.name }}" width="100%" height="100%">
+                                </div>
+                                <div class="card-body p-1">
+                                    <h6 class="text-center">{{ get_cat.name }}</h6>
+                                    <p class="text-center p-0 mb-0"><small>KSh. {{ get_cat.price }}</small></p>
+                                    {% if get_cat.discount > 0 %}
+                                    <p class="text-center text-danger p-0 mb-0"><small>{{ get_cat.discount }}% Off</small></p>
+                                    {% endif %}
+                                </div>
+                                <div class="card-footer">
+                                    <a href="#" class="float-start btn btn-sm btn-primary">details</a>
+                                    <a href="#" class="float-end btn btn-sm btn-warning">Add to Cart</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    {% for product in products %}
+                        <div class="col-md-3 mt-3 w-25">
+                            <div class="card h-100 p-0">
+                                <div class="card-head" style="height: 223px;">
+                                    <img src="{{ url_for('static', filename='images/' + product.image_1) }}" alt="{{ product.name }}" width="100%" height="100%">
+                                </div>
+                                <div class="card-body p-1">
+                                    <h6 class="text-center">{{ product.name }}</h6>
+                                    <p class="text-center p-0 mb-0"><small>KSh. {{ product.price }}</small></p>
+                                    {% if product.discount > 0 %}
+                                    <p class="text-center text-danger p-0 mb-0"><small>{{ product.discount }}% Off</small></p>
+                                    {% endif %}
+                                </div>
+                                <div class="card-footer">
+                                    <a href="#" class="float-start btn btn-sm btn-primary">details</a>
+                                    <a href="#" class="float-end btn btn-sm btn-warning">Add to Cart</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+           </div>
+
+{% endblock content %}
