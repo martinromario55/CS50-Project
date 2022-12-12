@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Home
+{% endblock %}
+
+{% block content %}
+    {% include "navbar.html" %}
+        {% include '_messages.html' %}
+          
+           <div class="container mt-5">
+                <div class="row">
+                    <h4>{{ product.name }}</h4>
+                    <hr>
+                    <div class="col-md-6">
+                        <img src="{{ url_for('static', filename='images/' + product.image_1) }}" alt="{{ product.name }}" width="400px" height="400px" id="b_image">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <img src="{{ url_for('static', filename='images/' + product.image_1) }}" alt="{{ product.name }}" width="120" class="s_image">
+                                <img src="{{ url_for('static', filename='images/' + product.image_2) }}" alt="{{ product.name }}" width="120" class="s_image">
+                                <img src="{{ url_for('static', filename='images/' + product.image_3) }}" alt="{{ product.name }}" width="120" class="s_image">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        
+                        <h5>KSh. {{ product.price }}</h5>
+                        {% if product.discount > 0 %}
+                            <p class="text-danger">{{ product.discount }}% Off</p>
+                        {% endif %}
+                        <hr>
+                        <form action="{{url_for('AddCart')}}" method="post">
+                            <input type="hidden" name="product_id" value="{{product.id}}">
+                            <button type="submit" class="btn btn-sm btn-warning">Add to Cart</button>
+                            <label for="quantity">Quantity: </label>
+                            <input type="number" name="quantity" value="1" min="1" max="{{product.stock}}">
+                            {% set colors = product.colors.split(',') %}
+                            <label for="colors">Colors: </label>
+                            <select name="colors" id="colors">
+                                {% for color in colors %}
+                                {% set col = color.split(':') %}
+                                <option value="{{col[0]}}">{{col[0] | capitalize }}</option>
+                                {% endfor %}
+                            </select>
+                        </form>
+                        <hr>
+                        <b>Product Description</b>
+                        <p>{{ product.desc }}</p>
+                    </div>
+                </div>
+                
+           </div>
+           
+{% endblock %}
