@@ -1,5 +1,5 @@
 from flask import redirect, render_template, url_for, flash, request, session, current_app
-from shop import db, app, photos
+from shop import db, app, photos, search
 from .models import Brand, Category, Addproduct
 from .forms import Addproducts
 import secrets, os
@@ -20,6 +20,14 @@ def home():
     products = Addproduct.query.filter(Addproduct.stock > 0).order_by(Addproduct.id.desc()).paginate(page=page, per_page=12)
 
     return render_template('products/index.html', products=products, brands=brands(), categories=categories())
+
+
+@app.route('/result')
+def result():
+    searchword = request.args.get('q')
+    products = Addproduct.query.msearch(searchword, fields=['name', 'desc'], limit=12)
+    
+    return render_template('products/result.html', products=products, brands=brands(), categories=categories())
 
 
 @app.route('/product/<int:id>')

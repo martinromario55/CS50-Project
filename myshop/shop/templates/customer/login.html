@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Login
+{% endblock %}
+
+{% block content %}
+{% include "navbar.html" %}  
+    
+    <div class="container">
+        <div class="row mt-5">
+            
+            <div class="col-md-2"></div>
+            <div class="col-md-6">
+                <div class="text-center h1 text-danger bg-primary p-2 text-white">Login</div>
+                {% include '_messages.html' %}
+                {% from "_formhelpers.html" import render_field %}
+                <form method="post" enctype="multipart/form-data">
+                    {{ form.csrf_token }}
+                <div>
+                    {{ render_field(form.email, class="form-control") }}
+                    {{ render_field(form.password, class="form-control") }}
+                </div>
+                <p><input type=submit value=Login class="btn btn-info mt-2"></p>
+                </form>
+                <span>Not registered? <a href="{{ url_for('customer_register') }}" style="margin-left:10px;">Create Account</a></span>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+    </div>
+{% endblock content %}
