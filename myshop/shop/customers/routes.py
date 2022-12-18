@@ -1,4 +1,4 @@
-from flask import redirect, render_template, url_for, flash, request, session, current_app, make_response
+from flask import redirect, render_template, url_for, flash, request, session, current_app, make_response, jsonify
 from shop import db, app, photos, search, bcrypt, login_manager
 from flask_login import login_required, current_user, login_user, logout_user
 from .forms import CustomerRegisterForm, CustomerLoginForm
@@ -6,10 +6,12 @@ from .models import Register, CustomerOrder
 import secrets, os
 from shop.products.routes import brands, categories
 import pdfkit
+import stripe
+
+publishable_key = 'pk_test_51MF97vDBC1bqubIpHryUXZoGgvVuPiUQsAlqV0Ku6TVspWyVXUiI9GMgFLK84zAzlwhbMJSpE8T27PDyEF25W0ns00VMYHiY2w'
+stripe.api_key = 'sk_test_51MF97vDBC1bqubIpUBoRB0UQmxxxHh3nCBVZ5FYrH2xRnjOtasmzFx8QTsZKamnpGHXRc3tKwPhCqcFzg97iTcwj00Ka7JWlmF'
 
 
-def convertHTMLToPDF(html, savename):
-    pdfkit.from_url(html, savename)
 
 
 @app.route('/customer/register', methods=['GET', 'POST'])
@@ -107,14 +109,14 @@ def orders(invoice):
         subTotal = 0
         customer_id = current_user.id
         customer = Register.query.filter_by(id=customer_id).first()
-        orders = CustomerOrder.query.filter_by(customer_id=customer_id).order_by(CustomerOrder.id.desc()).first()
+        orders = CustomerOrder.query.filter_by(customer_id=customer_id, invoice=invoice).order_by(CustomerOrder.id.desc()).first()
 
         for _key, product in orders.orders.items():
             discount = (product['discount'] / 100 * float(product['price']))
             subTotal = float(product['price'] * int(product['quantity']))
             subTotal -= discount
             tax = ("%.2f" % (.02 * float(subTotal)))
-            grandTotal = float("%.2f" % (1.02 * subTotal))
+            grandTotal = ("%.2f" % (1.02 * float(subTotal)))
             
 
     else:
@@ -125,34 +127,8 @@ def orders(invoice):
 
 
 
-@app.route('/get_pdf/<invoice>', methods=['POST'])
+@app.route('/payment')
 @login_required
-def get_pdf(invoice):
-    if current_user.is_authenticated:
-        grandTotal = 0
-        subTotal = 0
-        customer_id = current_user.id
+def payment():
 
-        if request.method == 'POST':
-
-            customer = Register.query.filter_by(id=customer_id).first()
-            orders = CustomerOrder.query.filter_by(customer_id=customer_id).order_by(CustomerOrder.id.desc()).first()
-
-            for _key, product in orders.orders.items():
-                discount = (product['discount'] / 100 * float(product['price']))
-                subTotal = float(product['price'] * int(product['quantity']))
-                subTotal -= discount
-                tax = ("%.2f" % (.02 * float(subTotal)))
-                grandTotal = float("%.2f" % (1.02 * subTotal))
-
-            rendered = render_template('customer/pdf.html', invoice=invoice, tax=tax, subTotal=subTotal, grandTotal=grandTotal, customer=customer, orders=orders)
-
-            # pdf = pdfkit.from_string(rendered, False)
-            pdf = pdfkit.from_url(rendered)
-            response = make_response(pdf)
-            response.headers['content-Type'] = 'application/pdf'
-            response.headers['content-Disposition'] = 'inline; filename='+invoice+'.pdf'
-
-            return response
-
-    return request(url_for('orders'))
+    return render_template('customer/thanks.html')

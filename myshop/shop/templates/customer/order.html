@@ -60,11 +60,19 @@
         </table>
         </div>
         <div class="row mt-5">
-            <div class="col-md-10">
+            <div class="col-md-8">
                 
             </div>
             <div class="col-md-2">
                     <button type="button" class="btn btn-info btn-sm" id="pdfBtn">Download invoice</button>
+            </div>
+            <div class="col-md-2">
+                {% if orders.status =='Paid' %}
+                {% else %}
+                {% set amount =  grandTotal.replace('.','') %}
+
+                <a href="/payment" class="btn btn-sm btn-success">Purchase</a>
+                {% endif %}
             </div>
         </div>
         <script>
@@ -75,7 +83,7 @@
                 html2pdf()
                 .from(htmlPage)
                 .save(filename='invoice')
-})
+            })
         </script>
     </div>
 {% endblock %}
