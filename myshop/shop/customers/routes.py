@@ -5,12 +5,6 @@ from .forms import CustomerRegisterForm, CustomerLoginForm
 from .models import Register, CustomerOrder
 import secrets, os
 from shop.products.routes import brands, categories
-import pdfkit
-import stripe
-
-publishable_key = 'pk_test_51MF97vDBC1bqubIpHryUXZoGgvVuPiUQsAlqV0Ku6TVspWyVXUiI9GMgFLK84zAzlwhbMJSpE8T27PDyEF25W0ns00VMYHiY2w'
-stripe.api_key = 'sk_test_51MF97vDBC1bqubIpUBoRB0UQmxxxHh3nCBVZ5FYrH2xRnjOtasmzFx8QTsZKamnpGHXRc3tKwPhCqcFzg97iTcwj00Ka7JWlmF'
-
 
 
 
