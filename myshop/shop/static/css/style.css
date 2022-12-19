@@ -1,0 +1,34 @@
+
+/* Media Queries */
+/* Ipads and Tablet devices */
+@media (max-width: 799px) {
+    body {
+        width: 100vw!important;
+        margin: 0!important;
+        padding: 0!important;
+        box-sizing: border-box!important;
+    }
+
+    .w-25 {
+        width: 50%!important;
+    }
+
+    .btn {
+        margin-bottom: 10px!important;
+    }
+}
+
+/* Mobile Devices */
+@media (max-width:477px) {
+    .w-25 {
+        width: 50%!important;
+    }
+
+    table {
+        overflow: auto;
+    }
+
+    .btn {
+        margin-bottom: 10px!important;
+    }
+}
